@@ -7,7 +7,7 @@
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Bebas+Neue&family=Montserrat:wght@900&family=Oswald:wght@700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Bebas+Neue&family=Montserrat:wght@900&family=Oswald:wght@700&family=Bungee&family=Black+Ops+One&family=Russo+One&family=Alfa+Slab+One&display=swap">
 <style>
 :root{--bg:#f6f6f4;--card:#fff;--tx:#1b1b1b;--mu:#666;--bd:#ddd;--ac:#c8102e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161616;--card:#222;--tx:#eee;--mu:#aaa;--bd:#444}}
@@ -36,6 +36,15 @@ input[type=date]{width:100%;padding:9px;border-radius:8px;border:1px solid var(-
 button.lo{padding:3px;border:2px solid var(--bd);border-radius:8px;background:var(--card);font-size:10px;color:var(--mu);line-height:1.2}
 button.lo canvas{width:100%;aspect-ratio:4/5;border:0;border-radius:4px;display:block;margin-bottom:3px}
 button.lo.on{border-color:var(--ac);color:var(--tx);font-weight:600}
+#fg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+button.fo{padding:10px 6px 6px;border:2px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);text-align:center;line-height:1.15}
+button.fo .fs{display:block;font-size:20px;letter-spacing:.5px;white-space:nowrap;overflow:hidden}
+button.fo small{display:block;margin-top:5px;font:10px system-ui,sans-serif;color:var(--mu)}
+button.fo.on{border-color:var(--ac)}
+button.fo.on small{color:var(--tx);font-weight:600}
+button.tg{width:100%;display:flex;justify-content:space-between;align-items:center;margin-top:10px;text-align:left}
+button.tg b{font-weight:600;color:var(--ac)}
+button.tg i{font-style:normal;color:var(--mu)}
 </style></head><body><main>
 <h1>📸 Pembuat Kolase Kerja</h1>
 
@@ -57,17 +66,22 @@ button.lo.on{border-color:var(--ac);color:var(--tx);font-weight:600}
 <textarea id="jd" hidden></textarea>
 <button id="eb2" onclick="tm()" style="width:100%;margin-bottom:6px">✏️ EDIT MODEL</button>
 <div id="em" style="display:none">
-<label>Font Caption</label>
-<select id="fn">
+<button type="button" id="bf" class="tg" onclick="tgl('fg','bf')"><span>🔤 Font Caption: <b id="fnm"></b></span><i>▾</i></button>
+<select id="fn" hidden>
 <option value="Arial Black|900|1">Bawaan (Arial Black)</option>
 <option value="Anton|400|1.15">Anton - tegas &amp; padat</option>
 <option value="Bebas Neue|400|1.3">Bebas Neue - ramping &amp; modern</option>
 <option value="Oswald|700|1.1">Oswald - tegas &amp; rapi</option>
 <option value="Montserrat|900|0.95">Montserrat Black - bulat &amp; kokoh</option>
 <option value="Archivo Black|400|1">Archivo Black - lebar &amp; kuat</option>
+<option value="Bungee|400|0.85">Bungee - blok kota &amp; berani</option>
+<option value="Black Ops One|400|0.9">Black Ops One - militer &amp; garang</option>
+<option value="Russo One|400|0.95">Russo One - kekar &amp; futuristik</option>
+<option value="Alfa Slab One|400|0.9">Alfa Slab One - tebal &amp; berwibawa</option>
 </select>
-<label>Tata letak</label>
-<input id="ly" type="hidden" value="2,3,3,3"><div id="lg"></div>
+<div id="fg" style="display:none"></div>
+<button type="button" id="bl" class="tg" onclick="tgl('lg','bl')"><span>🧩 Tata Letak: <b id="lnm"></b></span><i>▾</i></button>
+<input id="ly" type="hidden" value="2,3,3,3"><div id="lg" style="display:none"></div>
 <div class="row">
 <div><label>Ukuran</label><select id="rs"><option value="1080,1350">Portrait 4:5</option><option value="1080,1080">Kotak 1:1</option><option value="1080,1920">Story 9:16</option></select></div>
 <div><label>Posisi Caption</label><select id="ps"><option value="0.25">Atas-tengah</option><option value="0">Paling atas</option><option value="0.5">Tengah</option><option value="1">Paling bawah</option></select></div>
@@ -77,10 +91,16 @@ button.lo.on{border-color:var(--ac);color:var(--tx);font-weight:600}
 <div><label>Warna</label><input id="cl" type="color" value="#c8102e" style="width:100%;height:40px;border:1px solid var(--bd);border-radius:8px;background:var(--bg)"></div>
 </div>
 </div>
-<label>Ukuran huruf judul: <span id="fv">100</span>%</label>
+<button type="button" id="bz" class="tg" onclick="tgl('zz','bz')"><span>📏 SIZE &amp; LINE</span><i>▾</i></button>
+<div id="zz" style="display:none">
+<label>Ukuran Caption: <span id="fv">100</span>%</label>
 <input id="fs" type="range" min="60" max="150" value="100" style="width:100%">
 <label>Jarak antar foto: <span id="gv">1</span>px</label>
 <input id="gp" type="range" min="0" max="20" value="1" style="width:100%">
+</div>
+<label style="margin-top:14px;color:var(--tx);font-weight:600">Watermark</label>
+<label style="display:flex;gap:8px;align-items:center;color:var(--tx)"><input id="w1" type="checkbox" style="width:auto" onchange="draw()"> Logo TELKOMSEL (kiri atas)</label>
+<label style="display:flex;gap:8px;align-items:center;color:var(--tx)"><input id="w2" type="checkbox" style="width:auto" onchange="draw()"> Logo BY.U (kanan atas)</label>
 <label style="display:flex;gap:8px;align-items:center;margin-top:14px;color:var(--tx)"><input id="st" type="checkbox" style="width:auto"> Tampilkan tanggal &amp; lokasi</label>
 <div class="row"><div><label>Tanggal</label><input id="dt" type="date"></div><div><label>Lokasi</label><input id="lc" type="text" placeholder="mis. Cianjur"></div></div>
 <button onclick="gps()" style="margin-top:8px">📍 Isi dengan koordinat GPS</button>
@@ -117,7 +137,7 @@ const TH=["/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYI
 const LY=[['2,3,3,3','2-3-3-3'],['2','2 kolom'],['3','3 kolom'],['4','4 kolom'],['1,2,2,2','1 besar + 2'],['1,3,3,3','1 besar + 3'],['1,2,3','1-2-3'],['2,2,3','2-2-3'],['3,2,2,2','3 + 2 kolom'],['~2,3','Selang 2-3'],['~3,2','Selang 3-2'],['~1,2','Selang 1-2'],['~2,1','Selang 2-1']];
 function mkRows(raw,N){const cyc=raw[0]==='~',pat=raw.replace('~','').split(',').map(Number),rows=[];let n=0,k=0;while(n<N){const c=Math.min(cyc?pat[k%pat.length]:pat[Math.min(k,pat.length-1)],N-n);rows.push(c);n+=c;k++}return rows}
 const TI=[];let tl=0;TH.forEach(t=>{const i=new Image();i.onload=()=>{if(++tl===TH.length)pv()};i.src='data:image/jpeg;base64,'+t;TI.push(i)});
-function mark(){[...$('lg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===$('ly').value))}
+function mark(){[...$('lg').children].forEach(b=>{const on=b.dataset.v===$('ly').value;b.classList.toggle('on',on);if(on)$('lnm').textContent=b.lastElementChild.textContent})}
 function pv(){const g=$('lg');if(!g.children.length){LY.forEach(([v,nm])=>{const b=document.createElement('button');b.type='button';b.className='lo';b.dataset.v=v;b.innerHTML='<canvas width="120" height="150"></canvas><div>'+nm+'</div>';b.onclick=()=>{$('ly').value=v;mark();draw()};g.appendChild(b)})}
 [...g.children].forEach(b=>{const q=b.querySelector('canvas').getContext('2d'),W=120,H=150,gp=2,rows=mkRows(b.dataset.v,8);q.fillStyle='#fff';q.fillRect(0,0,W,H);const rh=(H-gp*(rows.length+1))/rows.length;let id=0;rows.forEach((n,r)=>{const cw=(W-gp*(n+1))/n;for(let j=0;j<n;j++){const im=TI[id++%TI.length],dx=gp+j*(cw+gp),dy=gp+r*(rh+gp);if(!im.width)continue;const sc=Math.max(cw/im.width,rh/im.height),w=im.width*sc,h=im.height*sc;q.save();q.beginPath();q.rect(dx,dy,cw,rh);q.clip();q.drawImage(im,dx+(cw-w)/2,dy+(rh-h)/2,w,h);q.restore()}})});mark()}
 pv();
@@ -144,8 +164,18 @@ if(!clean&&capOn){x.save();x.setLineDash([14,10]);x.strokeStyle='#00c2ff';x.line
 x.fillStyle='#fff';x.textAlign='center';x.textBaseline='middle';if(emp)x.globalAlpha=.7;
 lines.forEach((l,i)=>x.fillText(l,bx+bw/2,y+fz*0.3+lh*(i+0.5)));
 x.globalAlpha=1;x.textBaseline='alphabetic'}
-stamp(W,H);if(!clean&&ed&&sel>=0){const c=cells.find(c=>c.k===sel);if(c){x.strokeStyle='#00c2ff';x.lineWidth=6;x.strokeRect(c.dx+3,c.dy+3,c.dw-6,c.dh-6)}}
+wm(W,H);stamp(W,H);if(!clean&&ed&&sel>=0){const c=cells.find(c=>c.k===sel);if(c){x.strokeStyle='#00c2ff';x.lineWidth=6;x.strokeRect(c.dx+3,c.dy+3,c.dw-6,c.dh-6)}}
 }
+function rr(a,b,w,h,r){x.beginPath();x.moveTo(a+r,b);x.arcTo(a+w,b,a+w,b+h,r);x.arcTo(a+w,b+h,a,b+h,r);x.arcTo(a,b+h,a,b,r);x.arcTo(a,b,a+w,b,r);x.closePath()}
+function wm(W,H){const h=W*0.055,m=W*0.025,F='Arial,Helvetica,sans-serif';
+if($('w1').checked){x.save();x.textBaseline='middle';x.textAlign='left';const fz=h*0.52;x.font=`800 ${fz}px ${F}`;const tw=x.measureText('telkomsel').width,ic=h*0.7,pw=h*0.15+ic+h*0.15+tw+h*0.35;
+x.shadowColor='rgba(0,0,0,.35)';x.shadowBlur=h*0.15;x.fillStyle='#fff';rr(m,m,pw,h,h/2);x.fill();x.shadowColor='transparent';
+x.fillStyle='#EC0000';x.beginPath();x.arc(m+h*0.15+ic/2,m+h/2,ic/2,0,Math.PI*2);x.fill();
+x.fillStyle='#fff';x.textAlign='center';x.font=`800 ${ic*0.78}px ${F}`;x.fillText('t',m+h*0.15+ic/2,m+h/2+ic*0.03);
+x.textAlign='left';x.fillStyle='#EC0000';x.font=`800 ${fz}px ${F}`;x.fillText('telkomsel',m+h*0.15+ic+h*0.15,m+h/2+h*0.02);x.restore()}
+if($('w2').checked){x.save();x.textBaseline='middle';x.textAlign='left';const fz=h*0.6;x.font=`800 ${fz}px ${F}`;const a1=x.measureText('by.').width,a2=x.measureText('U').width,pw=a1+a2+h*0.8,px=W-m-pw;
+x.shadowColor='rgba(0,0,0,.35)';x.shadowBlur=h*0.15;x.fillStyle='#111';rr(px,m,pw,h,h/2);x.fill();x.shadowColor='transparent';
+x.fillStyle='#fff';x.fillText('by.',px+h*0.4,m+h/2+h*0.02);x.fillStyle='#FFD400';x.fillText('U',px+h*0.4+a1,m+h/2+h*0.02);x.restore()}}
 function stamp(W,H){if(!$('st').checked)return;const v=$('dt').value,loc=$('lc').value.trim();try{localStorage.setItem('lk',loc)}catch(e){}
 let t=v?new Date(v+'T00:00:00').toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'}):'';if(loc)t+=(t?' • ':'')+loc;if(!t)return;
 let fz=W*0.03;x.font=`700 ${fz}px Arial,sans-serif`;const mw=W*0.9-fz*1.6,tw=x.measureText(t).width;if(tw>mw){fz*=mw/tw;x.font=`700 ${fz}px Arial,sans-serif`}
@@ -179,7 +209,10 @@ cv.onpointerup=cv.onpointercancel=e=>{const tap=e.type==='pointerup'&&drag&&drag
 {const d=new Date();$('dt').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');try{$('lc').value=localStorage.getItem('lk')||''}catch(e){}}
 ;['jd','ly','rs','ps','bw','cl','fs','gp','st','dt','lc'].forEach(i=>$(i).oninput=()=>{$('fv').textContent=$('fs').value;$('gv').textContent=$('gp').value;draw()});
 $('ps').oninput=()=>{cpos=null;cs=1;draw()};
-$('fn').oninput=async()=>{const[n,w]=$('fn').value.split('|');try{await document.fonts.load(w+' 40px "'+n+'"')}catch(e){}draw()};
+function tgl(id,bt){const e=$(id),h=e.style.display==='none';e.style.display=h?(id==='zz'?'block':'grid'):'none';$(bt).lastElementChild.textContent=h?'▴':'▾'}
+function fmark(){[...$('fg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===$('fn').value));const o=$('fn').selectedOptions[0];if(o)$('fnm').textContent=o.textContent.split(' - ')[0]}
+$('fn').oninput=async()=>{fmark();const[n,w]=$('fn').value.split('|');try{await document.fonts.load(w+' 40px "'+n+'"')}catch(e){}draw()};
+(function(){const g=$('fg');[...$('fn').options].forEach(o=>{const[n,w]=o.value.split('|'),b=document.createElement('button');b.type='button';b.className='fo';b.dataset.v=o.value;b.innerHTML=`<span class="fs" style="font:${w} 20px '${n}','Arial Black',Impact,sans-serif">EDWAR TAMVAN</span><small>${o.textContent.split(' - ')[0]}</small>`;b.onclick=()=>{$('fn').value=o.value;$('fn').oninput()};g.appendChild(b)});fmark()})();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>draw());
 function unduh(){if(!P.length){alert('Tambahkan foto dulu');return}
 draw(true);const jpg=$('fm').value==='jpg',tp=jpg?'image/jpeg':'image/png';
