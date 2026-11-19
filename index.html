@@ -34,28 +34,42 @@ input[type=date]{width:100%;padding:9px;border-radius:8px;border:1px solid var(-
 <h1>📸 Pembuat Kolase Kerja</h1>
 
 <div class="c">
+<button id="eb" onclick="tg()" style="width:100%;margin-bottom:8px">✋ Atur posisi &amp; zoom foto</button>
+<div id="zb" hidden><div class="m">Ketuk foto lalu geser untuk atur posisi foto. Geser kotak CAPTION (garis putus-putus biru) untuk pindah posisi caption. <b id="zl"></b></div><input id="zm" type="range" min="100" max="300" value="100" disabled style="width:100%"></div>
+<canvas id="cv"></canvas>
+<div style="margin-top:10px">
 <button class="p" style="width:100%" onclick="f.click()">+ Tambah Foto</button>
-<input id="f" type="file" accept="image/*" multiple hidden>
+<input id="f" type="file" accept="image/*,.heic,.heif,image/heic,image/heif" multiple hidden>
 <div id="th"></div>
 <div class="m" id="cnt">Belum ada foto</div>
 </div>
+<div class="row" style="margin-top:10px"><button class="p" onclick="unduh()">⬇️ Download Foto</button><select id="fm" style="flex:0 0 42%"><option value="jpg">JPG (ringan)</option><option value="png">PNG (terbaik)</option></select></div>
+<div class="row" style="margin-top:8px"><button onclick="simpan()">📤 Bagikan (WhatsApp, dll)</button></div>
+<div id="res" class="m"></div>
+</div>
 
 <div class="c">
-<label>Judul aktivitas (Enter = baris baru)</label>
-<textarea id="jd" rows="2">DISTRIBUSI DAN AKTIFASI FR
-SMAN 1 WARUNGKONDANG CIANJUR</textarea>
+<label>CAPTION</label>
+<textarea id="jd" rows="2" placeholder="Masukan Text"></textarea>
 <label>Tata letak</label>
 <select id="ly">
-<option value="2,3,3,3">Seperti contoh (2-3-3-3)</option>
+<option value="2,3,3,3">2-3-3-3</option>
 <option value="2">Grid 2 kolom</option>
 <option value="3">Grid 3 kolom</option>
+<option value="4">Grid 4 kolom</option>
 <option value="1,2,2,2">1 besar + 2 kolom</option>
 <option value="1,3,3,3">1 besar + 3 kolom</option>
+<option value="1,2,3">1-2-3</option>
 <option value="2,2,3">2-2-3</option>
+<option value="3,2,2,2">3 + 2 kolom</option>
+<option value="~2,3">Selang-seling 2-3</option>
+<option value="~3,2">Selang-seling 3-2</option>
+<option value="~1,2">Selang-seling 1-2</option>
+<option value="~2,1">Selang-seling 2-1</option>
 </select>
 <div class="row">
 <div><label>Ukuran</label><select id="rs"><option value="1080,1350">Portrait 4:5</option><option value="1080,1080">Kotak 1:1</option><option value="1080,1920">Story 9:16</option></select></div>
-<div><label>Posisi judul</label><select id="ps"><option value="0.25">Atas-tengah</option><option value="0">Paling atas</option><option value="0.5">Tengah</option><option value="1">Paling bawah</option></select></div>
+<div><label>Posisi Caption</label><select id="ps"><option value="0.25">Atas-tengah</option><option value="0">Paling atas</option><option value="0.5">Tengah</option><option value="1">Paling bawah</option></select></div>
 </div>
 <div class="row">
 <div><label>Lebar banner</label><select id="bw"><option value="0.62">Sebagian</option><option value="1">Penuh</option></select></div>
@@ -63,39 +77,47 @@ SMAN 1 WARUNGKONDANG CIANJUR</textarea>
 </div>
 <label>Ukuran huruf judul: <span id="fv">100</span>%</label>
 <input id="fs" type="range" min="60" max="150" value="100" style="width:100%">
-<label>Jarak antar foto: <span id="gv">6</span>px</label>
-<input id="gp" type="range" min="0" max="20" value="6" style="width:100%">
+<label>Jarak antar foto: <span id="gv">1</span>px</label>
+<input id="gp" type="range" min="0" max="20" value="1" style="width:100%">
+<label>Efek pemutih wajah: <span id="wv">0</span>%</label>
+<input id="wh" type="range" min="0" max="100" value="0" style="width:100%">
 <label style="display:flex;gap:8px;align-items:center;margin-top:14px;color:var(--tx)"><input id="st" type="checkbox" checked style="width:auto"> Tampilkan tanggal &amp; lokasi</label>
 <div class="row"><div><label>Tanggal</label><input id="dt" type="date"></div><div><label>Lokasi</label><input id="lc" type="text" placeholder="mis. Cianjur"></div></div>
 <button onclick="gps()" style="margin-top:8px">📍 Isi dengan koordinat GPS</button>
 </div>
 
-<div class="c">
-<button id="eb" onclick="tg()" style="width:100%;margin-bottom:8px">✋ Atur posisi &amp; zoom foto</button>
-<div id="zb" hidden><div class="m">Ketuk foto di kanvas, lalu geser untuk atur posisi. <b id="zl"></b></div><input id="zm" type="range" min="100" max="300" value="100" disabled style="width:100%"></div>
-<canvas id="cv"></canvas>
-<div class="row" style="margin-top:10px"><button class="p" onclick="unduh()">⬇️ Download Foto</button><select id="fm" style="flex:0 0 42%"><option value="jpg">JPG (ringan)</option><option value="png">PNG (terbaik)</option></select></div>
-<div class="row" style="margin-top:8px"><button onclick="simpan()">📤 Bagikan (WhatsApp, dll)</button></div>
-<div id="res" class="m"></div>
-</div>
 <div class="m" style="text-align:center;font-size:11px;letter-spacing:.5px;margin:4px 0 18px">DIBUAT OLEH MUHAMAD EDWAR TAUFIQ HIDAYAT</div>
 </main>
 <script>
 const $=id=>document.getElementById(id),cv=$('cv'),x=cv.getContext('2d');
 let P=[];
-$('f').onchange=e=>{[...e.target.files].forEach(fl=>{const u=URL.createObjectURL(fl),i=new Image();i.onload=()=>{P.push({i,u,ox:0,oy:0,z:1});ui();draw()};i.src=u});e.target.value=''};
+function li(u){return new Promise((r,j)=>{const i=new Image();i.onload=()=>r(i);i.onerror=j;i.src=u})}
+let hl;function lh(){return hl||(hl=new Promise((r,j)=>{const t=document.createElement('script');t.src='https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.4/heic2any.min.js';t.onload=r;t.onerror=()=>{hl=null;j(new Error('lib'))};document.head.appendChild(t)}))}
+async function add(fl){if(P.length>=20){return}let u=URL.createObjectURL(fl),i;
+try{i=await li(u)}catch(e){
+if(!(/hei[cf]$/i.test(fl.name)||/hei[cf]/i.test(fl.type))){alert('Foto "'+fl.name+'" tidak bisa dibuka');return}
+try{await lh();let b=await heic2any({blob:fl,toType:'image/jpeg',quality:0.92});if(Array.isArray(b))b=b[0];URL.revokeObjectURL(u);u=URL.createObjectURL(b);i=await li(u)}catch(e2){alert('Foto HEIC "'+fl.name+'" gagal dibaca. Pastikan internet aktif lalu coba lagi.');return}}
+P.push({i,u,ox:0,oy:0,z:1});ui();draw()}
+$('f').onchange=async e=>{let fs=[...e.target.files];e.target.value='';const sisa=20-P.length;if(sisa<=0){alert('Maksimal 20 foto.');return}if(fs.length>sisa){alert('Maksimal 20 foto. Hanya '+sisa+' foto pertama yang dimasukkan.');fs=fs.slice(0,sisa)}$('cnt').textContent='Memproses foto...';for(const fl of fs)await add(fl);ui()};
 function mv(a,b){if(b<0||b>=P.length)return;[P[a],P[b]]=[P[b],P[a]];sel=-1;sync();ui();draw()}
 function del(a){P.splice(a,1);sel=-1;sync();ui();draw()}
 function ui(){$('th').innerHTML=P.map((p,k)=>`<div class="t"><img src="${p.u}"><button onclick="mv(${k},${k-1})">◀</button><button onclick="mv(${k},${k+1})">▶</button><button onclick="del(${k})">✕</button></div>`).join('');
-$('cnt').textContent=P.length?P.length+' foto (urutan = kiri ke kanan, atas ke bawah)':'Belum ada foto'}
-let cells=[],sel=-1,ed=false;
-function cover(k,dx,dy,dw,dh){const p=P[k],im=p.i,r=Math.max(dw/im.width,dh/im.height)*p.z,w=im.width*r,h=im.height*r,vx=(w-dw)/2,vy=(h-dh)/2;x.save();x.beginPath();x.rect(dx,dy,dw,dh);x.clip();x.drawImage(im,dx+(dw-w)/2+p.ox*vx,dy+(dh-h)/2+p.oy*vy,w,h);x.restore();cells.push({k,dx,dy,dw,dh,vx,vy})}
-function draw(clean){cells=[];
+$('cnt').textContent=P.length?P.length+'/20 foto (urutan = kiri ke kanan, atas ke bawah)':'Belum ada foto'}
+let cells=[],sel=-1,ed=false,cap=null,cpos=null;
+function cover(k,dx,dy,dw,dh){const p=P[k],im=p.i,r=Math.max(dw/im.width,dh/im.height)*p.z,w=im.width*r,h=im.height*r,vx=(w-dw)/2,vy=(h-dh)/2;x.save();x.beginPath();x.rect(dx,dy,dw,dh);x.clip();x.drawImage(im,dx+(dw-w)/2+p.ox*vx,dy+(dh-h)/2+p.oy*vy,w,h);x.restore();whiten(dx,dy,dw,dh);cells.push({k,dx,dy,dw,dh,vx,vy})}
+function sm(v,a,b,c,d){return v<=a?0:v<b?(v-a)/(b-a):v<=c?1:v<d?(d-v)/(d-c):0}
+function whiten(dx,dy,dw,dh){const a=$('wh').value/100;if(!a)return;dx=Math.max(0,Math.floor(dx));dy=Math.max(0,Math.floor(dy));dw=Math.min(cv.width-dx,Math.floor(dw));dh=Math.min(cv.height-dy,Math.floor(dh));if(dw<=0||dh<=0)return;
+const id=x.getImageData(dx,dy,dw,dh),d=id.data;
+for(let i=0;i<d.length;i+=4){const r=d[i],g=d[i+1],b=d[i+2],Y=.299*r+.587*g+.114*b,cb=128-.168736*r-.331264*g+.5*b,cr=128+.5*r-.418688*g-.081312*b;
+const w=sm(cb,72,82,122,132)*sm(cr,128,138,170,180)*sm(Y,45,80,255,256);if(w<=0)continue;
+const k=a*w*0.5;d[i]=r+(255-r)*k;d[i+1]=g+(255-g)*k*1.02;d[i+2]=b+(255-b)*k*1.08}
+x.putImageData(id,dx,dy)}
+function draw(clean){cells=[];cap=null;
 const [W,H]=$('rs').value.split(',').map(Number),g=+$('gp').value;cv.width=W;cv.height=H;
 x.fillStyle='#fff';x.fillRect(0,0,W,H);
 if(!P.length){x.fillStyle='#999';x.font='40px sans-serif';x.textAlign='center';x.fillText('Tambahkan foto dulu',W/2,H/2);return}
-const pat=$('ly').value.split(',').map(Number),rows=[];let n=0,k=0;
-while(n<P.length){const c=Math.min(pat[Math.min(k,pat.length-1)],P.length-n);rows.push(c);n+=c;k++}
+const raw=$('ly').value,cyc=raw[0]==='~',pat=raw.replace('~','').split(',').map(Number),rows=[];let n=0,k=0;
+while(n<P.length){const c=Math.min(cyc?pat[k%pat.length]:pat[Math.min(k,pat.length-1)],P.length-n);rows.push(c);n+=c;k++}
 const rh=(H-g*(rows.length+1))/rows.length;let idx=0;
 rows.forEach((c,r)=>{const cw=(W-g*(c+1))/c;for(let j=0;j<c;j++){cover(idx++,g+j*(cw+g),g+r*(rh+g),cw,rh)}});
 const lines=$('jd').value.split('\n').map(s=>s.trim()).filter(Boolean);
@@ -105,10 +127,13 @@ x.font=`900 ${fz}px "Arial Black",Arial,sans-serif`;
 const mx=Math.max(...lines.map(l=>x.measureText(l).width));
 if(mx>bw*0.92){fz*=bw*0.92/mx;x.font=`900 ${fz}px "Arial Black",Arial,sans-serif`}
 const lh=fz*1.25,bh=lines.length*lh+fz*0.9,t=+$('ps').value;
-const y=t===1?H-bh:Math.min(H-bh,H*t);
-x.fillStyle=$('cl').value;x.fillRect(0,y,bw,bh);
+let y=t===1?H-bh:Math.min(H-bh,H*t),bx=0;
+if(cpos){bx=cpos.fx*(W-bw);y=cpos.fy*(H-bh)}
+cap={x:bx,y,w:bw,h:bh,fw:W-bw,fh:H-bh};
+x.fillStyle=$('cl').value;x.fillRect(bx,y,bw,bh);
+if(!clean&&ed){x.save();x.setLineDash([14,10]);x.strokeStyle='#00c2ff';x.lineWidth=5;x.strokeRect(bx+3,y+3,bw-6,bh-6);x.restore()}
 x.fillStyle='#fff';x.textAlign='center';x.textBaseline='middle';
-lines.forEach((l,i)=>x.fillText(l,bw/2,y+fz*0.45+lh*(i+0.5)));
+lines.forEach((l,i)=>x.fillText(l,bx+bw/2,y+fz*0.45+lh*(i+0.5)));
 x.textBaseline='alphabetic'}
 stamp(W,H);if(!clean&&ed&&sel>=0){const c=cells.find(c=>c.k===sel);if(c){x.strokeStyle='#00c2ff';x.lineWidth=6;x.strokeRect(c.dx+3,c.dy+3,c.dw-6,c.dh-6)}}
 }
@@ -123,11 +148,12 @@ function tg(){ed=!ed;cv.classList.toggle('ed',ed);$('eb').textContent=ed?'✅ Se
 $('zm').oninput=()=>{if(sel<0)return;P[sel].z=$('zm').value/100;draw()};
 let drag=null;
 function pt(e){const r=cv.getBoundingClientRect(),s=cv.width/r.width;return{x:(e.clientX-r.left)*s,y:(e.clientY-r.top)*s}}
-cv.onpointerdown=e=>{if(!ed)return;const q=pt(e),c=cells.find(c=>q.x>=c.dx&&q.x<=c.dx+c.dw&&q.y>=c.dy&&q.y<=c.dy+c.dh);if(!c){sel=-1;sync();draw();return}sel=c.k;drag={lx:q.x,ly:q.y};try{cv.setPointerCapture(e.pointerId)}catch(_){}sync();draw()};
-cv.onpointermove=e=>{if(!drag||sel<0)return;const q=pt(e),c=cells.find(c=>c.k===sel),p=P[sel];if(c){if(c.vx>0)p.ox=Math.max(-1,Math.min(1,p.ox+(q.x-drag.lx)/c.vx));if(c.vy>0)p.oy=Math.max(-1,Math.min(1,p.oy+(q.y-drag.ly)/c.vy))}drag={lx:q.x,ly:q.y};draw()};
+cv.onpointerdown=e=>{if(!ed)return;const q=pt(e);if(cap&&q.x>=cap.x&&q.x<=cap.x+cap.w&&q.y>=cap.y&&q.y<=cap.y+cap.h){sel=-1;drag={lx:q.x,ly:q.y,cap:1};try{cv.setPointerCapture(e.pointerId)}catch(_){}sync();draw();return}const c=cells.find(c=>q.x>=c.dx&&q.x<=c.dx+c.dw&&q.y>=c.dy&&q.y<=c.dy+c.dh);if(!c){sel=-1;sync();draw();return}sel=c.k;drag={lx:q.x,ly:q.y};try{cv.setPointerCapture(e.pointerId)}catch(_){}sync();draw()};
+cv.onpointermove=e=>{if(drag&&drag.cap&&cap){const q=pt(e);let fx=cpos?cpos.fx:(cap.fw>0?cap.x/cap.fw:0),fy=cpos?cpos.fy:(cap.fh>0?cap.y/cap.fh:0);if(cap.fw>0)fx=Math.max(0,Math.min(1,fx+(q.x-drag.lx)/cap.fw));if(cap.fh>0)fy=Math.max(0,Math.min(1,fy+(q.y-drag.ly)/cap.fh));cpos={fx,fy};drag={lx:q.x,ly:q.y,cap:1};draw();return}if(!drag||sel<0)return;const q=pt(e),c=cells.find(c=>c.k===sel),p=P[sel];if(c){if(c.vx>0)p.ox=Math.max(-1,Math.min(1,p.ox+(q.x-drag.lx)/c.vx));if(c.vy>0)p.oy=Math.max(-1,Math.min(1,p.oy+(q.y-drag.ly)/c.vy))}drag={lx:q.x,ly:q.y};draw()};
 cv.onpointerup=cv.onpointercancel=()=>{drag=null};
 {const d=new Date();$('dt').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');try{$('lc').value=localStorage.getItem('lk')||''}catch(e){}}
-;['jd','ly','rs','ps','bw','cl','fs','gp','st','dt','lc'].forEach(i=>$(i).oninput=()=>{$('fv').textContent=$('fs').value;$('gv').textContent=$('gp').value;draw()});
+;['jd','ly','rs','ps','bw','cl','fs','gp','wh','st','dt','lc'].forEach(i=>$(i).oninput=()=>{$('fv').textContent=$('fs').value;$('gv').textContent=$('gp').value;$('wv').textContent=$('wh').value;draw()});
+$('ps').oninput=()=>{cpos=null;draw()};
 function unduh(){if(!P.length){alert('Tambahkan foto dulu');return}
 draw(true);const jpg=$('fm').value==='jpg',tp=jpg?'image/jpeg':'image/png';
 cv.toBlob(b=>{if(!b)return;const u=URL.createObjectURL(b),a=document.createElement('a'),d=new Date(),p=n=>String(n).padStart(2,'0');
