@@ -1,0 +1,14 @@
+{
+  "name": "Pembuat Kolase Kerja",
+  "short_name": "Kolase Kerja",
+  "description": "Buat kolase foto kegiatan kerja dengan judul banner merah.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#c8102e",
+  "theme_color": "#c8102e",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}
