@@ -37,7 +37,7 @@ input[type=date]{width:100%;padding:9px;border-radius:8px;border:1px solid var(-
 
 <div class="c">
 <canvas id="cv" class="ed"></canvas>
-<div class="m" style="margin-top:6px">Geser foto untuk pindah posisi, cubit 2 jari untuk zoom. Ketuk banner merah untuk isi caption; banner juga bisa digeser, dicubit, atau ditarik dari pojok biru.</div>
+<div class="m" style="margin-top:6px">Geser foto untuk pindah posisi, cubit 2 jari untuk zoom. Ketuk 2x banner merah untuk isi caption; banner juga bisa digeser, dicubit, atau ditarik dari pojok biru.</div>
 <div style="margin-top:10px">
 <button class="p" style="width:100%" onclick="f.click()">+ Tambah Foto</button>
 <input id="f" type="file" accept="image/*,.heic,.heif,image/heic,image/heif" multiple hidden>
@@ -83,7 +83,7 @@ input[type=date]{width:100%;padding:9px;border-radius:8px;border:1px solid var(-
 <div><label>Posisi Caption</label><select id="ps"><option value="0.25">Atas-tengah</option><option value="0">Paling atas</option><option value="0.5">Tengah</option><option value="1">Paling bawah</option></select></div>
 </div>
 <div class="row">
-<div><label>Lebar banner</label><select id="bw"><option value="0.62">Sebagian</option><option value="1">Penuh</option></select></div>
+<div><label>Lebar banner</label><select id="bw"><option value="0">Sesuai teks</option><option value="1">Penuh</option></select></div>
 <div><label>Warna</label><input id="cl" type="color" value="#c8102e" style="width:100%;height:40px;border:1px solid var(--bd);border-radius:8px;background:var(--bg)"></div>
 </div>
 </div>
@@ -91,7 +91,7 @@ input[type=date]{width:100%;padding:9px;border-radius:8px;border:1px solid var(-
 <input id="fs" type="range" min="60" max="150" value="100" style="width:100%">
 <label>Jarak antar foto: <span id="gv">1</span>px</label>
 <input id="gp" type="range" min="0" max="20" value="1" style="width:100%">
-<label style="display:flex;gap:8px;align-items:center;margin-top:14px;color:var(--tx)"><input id="st" type="checkbox" checked style="width:auto"> Tampilkan tanggal &amp; lokasi</label>
+<label style="display:flex;gap:8px;align-items:center;margin-top:14px;color:var(--tx)"><input id="st" type="checkbox" style="width:auto"> Tampilkan tanggal &amp; lokasi</label>
 <div class="row"><div><label>Tanggal</label><input id="dt" type="date"></div><div><label>Lokasi</label><input id="lc" type="text" placeholder="mis. Cianjur"></div></div>
 <button onclick="gps()" style="margin-top:8px">📍 Isi dengan koordinat GPS</button>
 </div>
@@ -131,20 +131,21 @@ const raw=$('ly').value,cyc=raw[0]==='~',pat=raw.replace('~','').split(',').map(
 while(n<P.length){const c=Math.min(cyc?pat[k%pat.length]:pat[Math.min(k,pat.length-1)],P.length-n);rows.push(c);n+=c;k++}
 const rh=(H-g*(rows.length+1))/rows.length;let idx=0;
 rows.forEach((c,r)=>{const cw=(W-g*(c+1))/c;for(let j=0;j<c;j++){cover(idx++,g+j*(cw+g),g+r*(rh+g),cw,rh)}});
-let lines=$('jd').value.split('\n').map(s=>s.trim()).filter(Boolean);const emp=!lines.length;if(emp&&!clean)lines=['MASUKAN CAPTION'];
+let lines=$('jd').value.split('\n').map(s=>s.trim()).filter(Boolean);const emp=!lines.length;if(emp&&!clean)lines=['KETUK 2X DISINI'];
 if(lines.length){
-const [fnm,fw,fsc]=$('fn').value.split('|'),FS=(z)=>`${fw} ${z}px "${fnm}","Arial Black",Impact,Arial,sans-serif`;let fz=W*0.056*$('fs').value/100*cs*(+fsc);const bw=Math.min(W,W*$('bw').value*cs);
+const [fnm,fw,fsc]=$('fn').value.split('|'),FS=(z)=>`${fw} ${z}px "${fnm}","Arial Black",Impact,Arial,sans-serif`;let fz=W*0.056*$('fs').value/100*cs*(+fsc);
 x.font=FS(fz);
-const mx=Math.max(...lines.map(l=>x.measureText(l).width));
-if(mx>bw*0.92){fz*=bw*0.92/mx;x.font=FS(fz)}
-const lh=fz*1.25,bh=lines.length*lh+fz*0.9,t=+$('ps').value;
+let mx=Math.max(...lines.map(l=>x.measureText(l).width));
+const m1=mx/fz,fit=W*0.96/(m1+1);if(fz>fit){fz=fit;x.font=FS(fz);mx=m1*fz}
+const bw=+$('bw').value===1?W:mx+fz*1.0;
+const lh=fz*1.2,bh=lines.length*lh+fz*0.6,t=+$('ps').value;
 let y=t===1?H-bh:Math.min(H-bh,H*t),bx=0;
 if(cpos){bx=Math.max(0,Math.min(W-bw,cpos.fx*W));y=Math.max(0,Math.min(H-bh,cpos.fy*H))}
 cap={x:bx,y,w:bw,h:bh};
 x.fillStyle=$('cl').value;x.fillRect(bx,y,bw,bh);
 if(!clean&&capOn){x.save();x.setLineDash([14,10]);x.strokeStyle='#00c2ff';x.lineWidth=5;x.strokeRect(bx+3,y+3,bw-6,bh-6);x.restore();const hs=W*0.05;x.fillStyle='#00c2ff';x.fillRect(bx+bw-hs-4,y+bh-hs-4,hs,hs);x.strokeStyle='#fff';x.lineWidth=3;x.strokeRect(bx+bw-hs-4,y+bh-hs-4,hs,hs)}
 x.fillStyle='#fff';x.textAlign='center';x.textBaseline='middle';if(emp)x.globalAlpha=.7;
-lines.forEach((l,i)=>x.fillText(l,bx+bw/2,y+fz*0.45+lh*(i+0.5)));
+lines.forEach((l,i)=>x.fillText(l,bx+bw/2,y+fz*0.3+lh*(i+0.5)));
 x.globalAlpha=1;x.textBaseline='alphabetic'}
 stamp(W,H);if(!clean&&ed&&sel>=0){const c=cells.find(c=>c.k===sel);if(c){x.strokeStyle='#00c2ff';x.lineWidth=6;x.strokeRect(c.dx+3,c.dy+3,c.dw-6,c.dh-6)}}
 }
@@ -162,7 +163,7 @@ function cclose(){$('cm').style.display='none'}
 $('ct').oninput=()=>{$('jd').value=$('ct').value;draw()};
 function pt(e){const r=cv.getBoundingClientRect(),s=cv.width/r.width;return{x:(e.clientX-r.left)*s,y:(e.clientY-r.top)*s}}
 document.addEventListener('pointerdown',e=>{if(e.target!==cv&&(sel>=0||capOn)){sel=-1;capOn=false;draw()}});
-const ptrs=new Map();let pinch=null;
+let lt=0;const ptrs=new Map();let pinch=null;
 function ecp(){if(!cpos&&cap)cpos={fx:cap.x/cv.width,fy:cap.y/cv.height}}
 cv.onpointerdown=e=>{if(!ed)return;const q=pt(e);ptrs.set(e.pointerId,q);try{cv.setPointerCapture(e.pointerId)}catch(_){}
 if(drag&&(drag.cap||drag.rs)&&ptrs.size===2&&cap){const[a,b]=[...ptrs.values()];ecp();pinch={d:Math.hypot(a.x-b.x,a.y-b.y)||1,cs:cs};drag=null;return}
@@ -177,7 +178,7 @@ if(drag&&drag.rs){cs=Math.max(.3,Math.min(3,drag.cs0*(drag.w0+(q.x-drag.sx))/dra
 if(drag&&drag.cap&&cpos&&cap){cpos.fx=Math.max(0,Math.min((cv.width-cap.w)/cv.width,cpos.fx+(q.x-drag.lx)/cv.width));cpos.fy=Math.max(0,Math.min((cv.height-cap.h)/cv.height,cpos.fy+(q.y-drag.ly)/cv.height));drag.mv=(drag.mv||0)+Math.abs(q.x-drag.lx)+Math.abs(q.y-drag.ly);drag.lx=q.x;drag.ly=q.y;draw();return}
 if(!drag||sel<0)return;const c=cells.find(c=>c.k===sel),p=P[sel];if(c){if(c.vx>0)p.ox=Math.max(-1,Math.min(1,p.ox+(q.x-drag.lx)/c.vx));if(c.vy>0)p.oy=Math.max(-1,Math.min(1,p.oy+(q.y-drag.ly)/c.vy))}drag={lx:q.x,ly:q.y};draw()};
 cv.onwheel=e=>{e.preventDefault();const q=pt(e),f=e.deltaY<0?1.08:1/1.08;if(cap&&q.x>=cap.x&&q.x<=cap.x+cap.w&&q.y>=cap.y&&q.y<=cap.y+cap.h)cs=Math.max(.3,Math.min(3,cs*f));else{const c=cells.find(c=>q.x>=c.dx&&q.x<=c.dx+c.dw&&q.y>=c.dy&&q.y<=c.dy+c.dh);if(c)P[c.k].z=Math.max(1,Math.min(3,P[c.k].z*f))}draw()};
-cv.onpointerup=cv.onpointercancel=e=>{const tap=e.type==='pointerup'&&drag&&drag.cap&&(drag.mv||0)<20&&ptrs.size===1;ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=null;if(ptrs.size===0)drag=null;if(tap)openCap()};
+cv.onpointerup=cv.onpointercancel=e=>{const tap=e.type==='pointerup'&&drag&&drag.cap&&(drag.mv||0)<20&&ptrs.size===1;ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=null;if(ptrs.size===0)drag=null;if(tap){const n=Date.now();if(n-lt<450){lt=0;openCap()}else lt=n}};
 {const d=new Date();$('dt').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');try{$('lc').value=localStorage.getItem('lk')||''}catch(e){}}
 ;['jd','ly','rs','ps','bw','cl','fs','gp','st','dt','lc'].forEach(i=>$(i).oninput=()=>{$('fv').textContent=$('fs').value;$('gv').textContent=$('gp').value;draw()});
 $('ps').oninput=()=>{cpos=null;cs=1;draw()};
