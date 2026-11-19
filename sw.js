@@ -1,5 +1,5 @@
 // Ubah angka versi ini setiap kali index.html diperbarui agar HP mengambil versi baru.
-const V = 'kolase-v1';
+const V = 'kolase-v2';
 const FILES = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(V).then(c => c.addAll(FILES)));

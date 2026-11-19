@@ -74,7 +74,8 @@ SMAN 1 WARUNGKONDANG CIANJUR</textarea>
 <button id="eb" onclick="tg()" style="width:100%;margin-bottom:8px">✋ Atur posisi &amp; zoom foto</button>
 <div id="zb" hidden><div class="m">Ketuk foto di kanvas, lalu geser untuk atur posisi. <b id="zl"></b></div><input id="zm" type="range" min="100" max="300" value="100" disabled style="width:100%"></div>
 <canvas id="cv"></canvas>
-<div class="row" style="margin-top:10px"><button class="p" onclick="simpan()">💾 Simpan / Bagikan</button></div>
+<div class="row" style="margin-top:10px"><button class="p" onclick="unduh()">⬇️ Download Foto</button><select id="fm" style="flex:0 0 42%"><option value="jpg">JPG (ringan)</option><option value="png">PNG (terbaik)</option></select></div>
+<div class="row" style="margin-top:8px"><button onclick="simpan()">📤 Bagikan (WhatsApp, dll)</button></div>
 <div id="res" class="m"></div>
 </div>
 <div class="m" style="text-align:center;font-size:11px;letter-spacing:.5px;margin:4px 0 18px">DIBUAT OLEH MUHAMAD EDWAR TAUFIQ HIDAYAT</div>
@@ -127,6 +128,12 @@ cv.onpointermove=e=>{if(!drag||sel<0)return;const q=pt(e),c=cells.find(c=>c.k===
 cv.onpointerup=cv.onpointercancel=()=>{drag=null};
 {const d=new Date();$('dt').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');try{$('lc').value=localStorage.getItem('lk')||''}catch(e){}}
 ;['jd','ly','rs','ps','bw','cl','fs','gp','st','dt','lc'].forEach(i=>$(i).oninput=()=>{$('fv').textContent=$('fs').value;$('gv').textContent=$('gp').value;draw()});
+function unduh(){if(!P.length){alert('Tambahkan foto dulu');return}
+draw(true);const jpg=$('fm').value==='jpg',tp=jpg?'image/jpeg':'image/png';
+cv.toBlob(b=>{if(!b)return;const u=URL.createObjectURL(b),a=document.createElement('a'),d=new Date(),p=n=>String(n).padStart(2,'0');
+a.href=u;a.download='kolase-'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+'.'+(jpg?'jpg':'png');
+document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)},tp,0.92);
+setTimeout(draw,0)}
 async function simpan(){draw(true);const du=cv.toDataURL('image/png');setTimeout(draw,0);
 if(!P.length)return;
 cv.toBlob(async b=>{
