@@ -116,15 +116,21 @@ function li(u){return new Promise((r,j)=>{const i=new Image();i.onload=()=>r(i);
 const HU=['https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.4/heic2any.min.js','https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js'];
 function ls(u){return new Promise((r,j)=>{const t=document.createElement('script');t.src=u;t.onload=r;t.onerror=()=>{t.remove();j(new Error('x'))};document.head.appendChild(t)})}
 async function lh(){if(window.heic2any)return;for(const u of HU){try{await ls(u);if(window.heic2any)return}catch(e){}}throw new Error('LIB: library HEIC tidak bisa dimuat')}
+async function isHeic(fl){
+if(/\.hei[cf]$/i.test(fl.name)||/hei[cf]/i.test(fl.type))return true;
+try{const h=new Uint8Array(await fl.slice(0,32).arrayBuffer());return /ftyp(heic|heix|hevc|hevx|heim|heis|mif1|msf1)/.test(String.fromCharCode(...h.slice(4,32)))}catch(e){return false}}
+function toJpg(im,w,h){const k=Math.min(1,4000/Math.max(w,h)),c=document.createElement('canvas');c.width=Math.round(w*k);c.height=Math.round(h*k);const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0,c.width,c.height);return new Promise(r=>c.toBlob(r,'image/jpeg',0.92))}
 async function heic(fl){
-try{if(window.ImageDecoder&&await ImageDecoder.isTypeSupported('image/heic')){const d=new ImageDecoder({data:await fl.arrayBuffer(),type:'image/heic'}),{image}=await d.decode(),c=document.createElement('canvas');c.width=image.displayWidth;c.height=image.displayHeight;c.getContext('2d').drawImage(image,0,0);image.close();const jb=await new Promise(r=>c.toBlob(r,'image/jpeg',0.92));if(jb)return jb}}catch(e){}
+try{const u=URL.createObjectURL(fl);try{const im=await li(u),jb=await toJpg(im,im.width,im.height);if(jb)return jb}finally{URL.revokeObjectURL(u)}}catch(e){}
+try{if(window.ImageDecoder&&await ImageDecoder.isTypeSupported('image/heic')){const d=new ImageDecoder({data:await fl.arrayBuffer(),type:'image/heic'}),{image}=await d.decode(),jb=await toJpg(image,image.displayWidth,image.displayHeight);image.close();if(jb)return jb}}catch(e){}
 await lh();let b=await heic2any({blob:new Blob([fl],{type:'image/heic'}),toType:'image/jpeg',quality:0.92});return Array.isArray(b)?b[0]:b}
-async function add(fl){if(P.length>=20){return}let u=URL.createObjectURL(fl),i;
-try{i=await li(u)}catch(e){
-if(!(/hei[cf]$/i.test(fl.name)||/hei[cf]/i.test(fl.type))){alert('Foto "'+fl.name+'" tidak bisa dibuka');return}
-try{const b=await heic(fl);URL.revokeObjectURL(u);u=URL.createObjectURL(b);i=await li(u)}catch(e2){
+async function add(fl){if(P.length>=20){return}let u,i;
+if(await isHeic(fl)){
+$('cnt').textContent='Mengonversi HEIC ke JPG: '+fl.name+'...';
+try{const b=await heic(fl);u=URL.createObjectURL(b);i=await li(u)}catch(e2){
 const m=String((e2&&(e2.message||e2.code))||e2),lib=/LIB/.test(m);
-alert('Foto HEIC "'+fl.name+'" gagal dibaca.\n\nPenyebab: '+m+'\n\n'+(lib?'Library HEIC tidak bisa diunduh. Cek internet, matikan pemblokir iklan/DNS, lalu coba lagi.':'Format HEIC ini tidak didukung aplikasi (atau ukuran fotonya terlalu besar). Solusi: buka foto di Galeri, simpan/bagikan sebagai JPG, atau ubah pengaturan kamera ke "JPEG / Paling kompatibel".'));return}}
+alert('Foto HEIC "'+fl.name+'" gagal dikonversi.\n\nPenyebab: '+m+'\n\n'+(lib?'Library HEIC tidak bisa diunduh. Cek internet, matikan pemblokir iklan/DNS, lalu coba lagi.':'Format HEIC ini tidak didukung aplikasi (atau ukuran fotonya terlalu besar). Solusi: buka foto di Galeri, simpan/bagikan sebagai JPG, atau ubah pengaturan kamera ke "JPEG / Paling kompatibel".'));return}}
+else{u=URL.createObjectURL(fl);try{i=await li(u)}catch(e){URL.revokeObjectURL(u);alert('Foto "'+fl.name+'" tidak bisa dibuka');return}}
 P.push({i,u,ox:0,oy:0,z:1});ui();draw()}
 $('f').onchange=async e=>{let fs=[...e.target.files];e.target.value='';const sisa=20-P.length;if(sisa<=0){alert('Maksimal 20 foto.');return}if(fs.length>sisa){alert('Maksimal 20 foto. Hanya '+sisa+' foto pertama yang dimasukkan.');fs=fs.slice(0,sisa)}$('cnt').textContent='Memproses foto...';for(const fl of fs)await add(fl);ui()};
 function mv(a,b){if(b<0||b>=P.length)return;[P[a],P[b]]=[P[b],P[a]];sel=-1;sync();ui();draw()}
